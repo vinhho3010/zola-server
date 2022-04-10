@@ -54,8 +54,7 @@ public class ServiceUser {
                 // Add addition info
                 p.setString(3, data.getGender());
 
-                //p.setString(6, data.getDescription());
-                //p.setString(7, data.getAvatarPath());
+                
                 
                 p.execute();
                 p.close();
@@ -63,7 +62,7 @@ public class ServiceUser {
                 con.setAutoCommit(true);
                 message.setAction(true);
                 message.setMessage("Ok");
-                message.setData(new Model_User_Account(userID, data.getUserName(), data.getGender(), "", true));
+                message.setData(new Model_User_Account(userID, data.getUserName(), data.getGender(), "", true, ""));
             }
         } catch (SQLException e) {
             message.setAction(false);
@@ -81,38 +80,40 @@ public class ServiceUser {
 
     public Model_User_Account login(Model_Login login) throws SQLException {
         Model_User_Account data = null;
-        PreparedStatement p = con.prepareStatement(LOGIN);
-        p.setString(1, login.getUserName());
-        p.setString(2, login.getPassword());
-        ResultSet r = p.executeQuery();
-        if (r.first()) {
-            int userID = r.getInt(1);
-            String userName = r.getString(2);
-            String gender = r.getString(3);
-            String image = r.getString(4);
-            data = new Model_User_Account(userID, userName, gender, image, true);
+        try (PreparedStatement p = con.prepareStatement(LOGIN)) {
+            p.setString(1, login.getUserName());
+            p.setString(2, login.getPassword());
+            try (ResultSet r = p.executeQuery()) {
+                if (r.first()) {
+                    int userID = r.getInt(1);
+                    String userName = r.getString(2);
+                    String gender = r.getString(3);
+                    String image = r.getString(4);
+                    String AvatarPath = r.getString(5);
+                    
+                    data = new Model_User_Account(userID, userName, gender, image, true, AvatarPath);
+                }
+            }
         }
-        r.close();
-        p.close();
         return data;
     }
 
     public List<Model_User_Account> getUser(int exitUser) throws SQLException {
         List<Model_User_Account> list = new ArrayList<>();
-        PreparedStatement p = con.prepareStatement(SELECT_USER_ACCOUNT);
-        p.setInt(1, exitUser);
-        ResultSet r = p.executeQuery();
-        while (r.next()) {
-            int userID = r.getInt(1);
-            String userName = r.getString(2);
-            String gender = r.getString(3);
-            String image = r.getString(4);
-            //String Description = r.getString(6);
-            //String AvatarPath = r.getString("AvatarPath");
-            list.add(new Model_User_Account(userID, userName, gender, image, checkUserStatus(userID)));
+        try (PreparedStatement p = con.prepareStatement(SELECT_USER_ACCOUNT)) {
+            p.setInt(1, exitUser);
+            try (ResultSet r = p.executeQuery()) {
+                while (r.next()) {
+                    int userID = r.getInt(1);
+                    String userName = r.getString(2);
+                    String gender = r.getString(3);
+                    String image = r.getString(4);
+                    String AvatarPath = r.getString(5);
+                    
+                    list.add(new Model_User_Account(userID, userName, gender, image, checkUserStatus(userID), AvatarPath));
+                }
+            }
         }
-        r.close();
-        p.close();
         return list;
     }
 
@@ -126,13 +127,12 @@ public class ServiceUser {
         return false;
     }
 
-    //  SQL
-    private final String LOGIN = "select UserID, user_account.UserName, Gender, ImageString from `user` join user_account using (UserID) where `user`.UserName=BINARY(?) and `user`.`Password`=BINARY(?) and user_account.`Status`='1'";
-    private final String SELECT_USER_ACCOUNT = "select UserID, UserName, Gender, ImageString from user_account where user_account.`Status`='1' and UserID<>?";
+     //  SQL
+    private final String LOGIN = "select UserID, user_account.UserName, Gender, ImageString, AvatarPath from `user` join user_account using (UserID) where `user`.UserName=BINARY(?) and `user`.`Password`=BINARY(?) and user_account.`Status`='1'";
+    private final String SELECT_USER_ACCOUNT = "select UserID, UserName, Gender, ImageString, AvatarPath from user_account where user_account.`Status`='1' and UserID<>?";
     private final String INSERT_USER = "insert into user (UserName, `Password`) values (?,?)";
-    private final String INSERT_USER_ACCOUNT = "insert into user_account (UserID, UserName, Gender) values (?,?,?)";
+    private final String INSERT_USER_ACCOUNT = "insert into user_account (UserID, UserName) values (?,?)";
     private final String CHECK_USER = "select UserID from user where UserName =? limit 1";
-    //private final String  INSERT_DESCRIPTION = "insert into user_account (Description) values(?)";
     //  Instance
     private final Connection con;
 }

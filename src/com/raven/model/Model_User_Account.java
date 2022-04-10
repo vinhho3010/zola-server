@@ -25,6 +25,14 @@ public class Model_User_Account {
     public void setGender(String gender) {
         this.gender = gender;
     }
+    
+    public String getAvatarPath() {
+        return AvatarPath;
+    }
+
+    public void setAvatarPath(String AvatarPath) {
+        this.AvatarPath = AvatarPath;
+    }
 
     public String getImage() {
         return image;
@@ -42,41 +50,22 @@ public class Model_User_Account {
         this.status = status;
     }
 
-//    public String getDescription() {
-//        return Description;
-//    }
-//
-//    public void setDescription(String Description) {
-//        this.Description = Description;
-//    }
-//
-//    public String getAvatarPath() {
-//        return AvatarPath;
-//    }
-//
-//    public void setAvatarPath(String AvatarPath) {
-//        this.AvatarPath = AvatarPath;
-//    }
-
-  public Model_User_Account(int userID, String userName, String gender, String image, boolean status) {
+  public Model_User_Account(int userID, String userName, String gender, String image, boolean status, String AvatarPath) {
         this.userID = userID;
         this.userName = userName;
         this.gender = gender;
         this.image = image;
         this.status = status;
-        //this.Description = Description;
-        //this.AvatarPath = AvatarPath;
+        this.AvatarPath = AvatarPath;
     }
 
-    public Model_User_Account() {
-    }
+
 
     private int userID;
     private String userName;
     private String gender;
     private String image;
     private boolean status;
-    //private String Description;
-    //private String AvatarPath;
+    private String AvatarPath;
 
 }
