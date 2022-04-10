@@ -28,7 +28,7 @@ public class ServiceUser {
             ResultSet r = p.executeQuery();
             if (r.first()) {
                 message.setAction(false);
-                message.setMessage("User Already Exit");
+                message.setMessage("User Already Exitst");
             } else {
                 message.setAction(true);
             }
@@ -51,8 +51,12 @@ public class ServiceUser {
                 p = con.prepareStatement(INSERT_USER_ACCOUNT);
                 p.setInt(1, userID);
                 p.setString(2, data.getUserName());
-                // Add Gender
+                // Add addition info
                 p.setString(3, data.getGender());
+
+                //p.setString(6, data.getDescription());
+                //p.setString(7, data.getAvatarPath());
+                
                 p.execute();
                 p.close();
                 con.commit();
@@ -103,6 +107,8 @@ public class ServiceUser {
             String userName = r.getString(2);
             String gender = r.getString(3);
             String image = r.getString(4);
+            //String Description = r.getString(6);
+            //String AvatarPath = r.getString("AvatarPath");
             list.add(new Model_User_Account(userID, userName, gender, image, checkUserStatus(userID)));
         }
         r.close();
@@ -126,6 +132,7 @@ public class ServiceUser {
     private final String INSERT_USER = "insert into user (UserName, `Password`) values (?,?)";
     private final String INSERT_USER_ACCOUNT = "insert into user_account (UserID, UserName, Gender) values (?,?,?)";
     private final String CHECK_USER = "select UserID from user where UserName =? limit 1";
+    //private final String  INSERT_DESCRIPTION = "insert into user_account (Description) values(?)";
     //  Instance
     private final Connection con;
 }
