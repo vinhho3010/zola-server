@@ -20,7 +20,7 @@ public class ServiceUser {
     }
 
     public Model_Message register(Model_Register data) {
-        //  Check user exit
+        //  Check user exitst
         Model_Message message = new Model_Message();
         try {
             PreparedStatement p = con.prepareStatement(CHECK_USER);
@@ -53,8 +53,8 @@ public class ServiceUser {
                 p.setString(2, data.getUserName());
                 // Add addition info
                 p.setString(3, data.getGender());
+                p.setString(4, data.getAvatarPath());
 
-                
                 
                 p.execute();
                 p.close();
@@ -62,7 +62,7 @@ public class ServiceUser {
                 con.setAutoCommit(true);
                 message.setAction(true);
                 message.setMessage("Ok");
-                message.setData(new Model_User_Account(userID, data.getUserName(), data.getGender(), "", true, ""));
+                message.setData(new Model_User_Account(userID, data.getUserName(), data.getGender(), "", true, data.getAvatarPath()));
             }
         } catch (SQLException e) {
             message.setAction(false);
@@ -131,7 +131,7 @@ public class ServiceUser {
     private final String LOGIN = "select UserID, user_account.UserName, Gender, ImageString, AvatarPath from `user` join user_account using (UserID) where `user`.UserName=BINARY(?) and `user`.`Password`=BINARY(?) and user_account.`Status`='1'";
     private final String SELECT_USER_ACCOUNT = "select UserID, UserName, Gender, ImageString, AvatarPath from user_account where user_account.`Status`='1' and UserID<>?";
     private final String INSERT_USER = "insert into user (UserName, `Password`) values (?,?)";
-    private final String INSERT_USER_ACCOUNT = "insert into user_account (UserID, UserName) values (?,?)";
+    private final String INSERT_USER_ACCOUNT = "insert into user_account (UserID, UserName, Gender, AvatarPath) values (?,?,?,?)";
     private final String CHECK_USER = "select UserID from user where UserName =? limit 1";
     //  Instance
     private final Connection con;

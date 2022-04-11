@@ -23,12 +23,12 @@ public class Model_Register {
         this.password = password;
     }
 
-    public Model_Register(String userName, String password, String gender) {
+    public Model_Register(String userName, String password, String gender, String AvatarPath) {
         this.userName = userName;
         this.password = password;
         this.gender = gender;
 //        this.Description = Description;
-//        this.AvatarPath = AvatarPath;
+        this.AvatarPath = AvatarPath;
     }
 
     public String getGender() {
@@ -56,13 +56,13 @@ public class Model_Register {
 //        this.Description = Description;
 //    }
 //
-//    public String getAvatarPath() {
-//        return AvatarPath;
-//    }
-//
-//    public void setAvatarPath(String AvatarPath) {
-//        this.AvatarPath = AvatarPath;
-//    }
+    public String getAvatarPath() {
+        return AvatarPath;
+    }
+
+    public void setAvatarPath(String AvatarPath) {
+        this.AvatarPath = AvatarPath;
+    }
     
     
 
@@ -74,7 +74,7 @@ public class Model_Register {
     private String gender;
     //private String imageString;
 //    private String Description;
-//    private String AvatarPath;
+    private String AvatarPath;
 
 
     
